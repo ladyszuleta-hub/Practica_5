@@ -29,11 +29,13 @@ private slots:
 
     void actualizar();
 
+
 private:
 
     Ui::MainWindow *ui;
 
     QTimer *timer;
+    float tiempo;
 
     std::vector<particula> particulas;
 };

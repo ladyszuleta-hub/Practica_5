@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    tiempo = 0;
 
     resize(800,600);
 
@@ -44,11 +45,12 @@ void MainWindow::actualizar()
 {
     QFile archivo("datos.txt");
 
+
     archivo.open(QIODevice::Append |
                  QIODevice::Text);
 
     QTextStream salida(&archivo);
-
+    //salida<<"tiempo id x y vx vy"<<"\n";
     // mover partículas
 
     for(size_t i=0;i<particulas.size();i++)
@@ -74,13 +76,15 @@ void MainWindow::actualizar()
         // guardar datos
 
         salida
-            << particulas[i].getX()
-            << " "
-            << particulas[i].getY()
+            << tiempo << " "
+            << i << " "
+            << particulas[i].getX() << " "
+            << particulas[i].getY() << " "
+            << particulas[i].getVx() << " "
+            << particulas[i].getVy()
             << "\n";
     }
 
-    archivo.close();
 
     // colisiones entre partículas
 
@@ -94,6 +98,11 @@ void MainWindow::actualizar()
                     particulas[i],
                     particulas[j]))
             {
+                salida
+                    << "COLISION "
+                    << tiempo << " "
+                    << i << " "
+                    << j << "\n";
                 colisiones::
                     colisionCompletamenteInelastica(
                         particulas[i],
@@ -101,6 +110,8 @@ void MainWindow::actualizar()
             }
         }
     }
+
+    archivo.close();
 
     repaint();
 }
