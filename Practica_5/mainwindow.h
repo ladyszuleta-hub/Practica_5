@@ -2,6 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTimer>
+#include <QPainter>
+#include <vector>
+#include "particula.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -17,7 +21,21 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+protected:
+
+    void paintEvent(QPaintEvent *event);
+
+private slots:
+
+    void actualizar();
+
 private:
+
     Ui::MainWindow *ui;
+
+    QTimer *timer;
+
+    std::vector<particula> particulas;
 };
+
 #endif // MAINWINDOW_H
