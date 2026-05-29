@@ -10,6 +10,11 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    QFile archivo("datos.txt");
+
+    archivo.open(QIODevice::WriteOnly | QIODevice::Text);
+
+    archivo.close();
     tiempo = 0;
 
     resize(800,600);
@@ -51,10 +56,13 @@ void MainWindow::actualizar()
 
     QTextStream salida(&archivo);
     //salida<<"tiempo id x y vx vy"<<"\n";
+
     // mover partículas
 
     for(size_t i=0;i<particulas.size();i++)
     {
+        if(!particulas[i].getActiva())
+            continue;
         particulas[i].mover(1);
 
         // rebote paredes
@@ -66,12 +74,17 @@ void MainWindow::actualizar()
 
         // obstáculo inelástico
 
-        colisiones::colisionObstaculo(
-            particulas[i],
-            300,
-            200,
-            150,
-            100);
+        // obstáculo 1
+        colisiones::colisionObstaculo(particulas[i],10,30,80,80);
+
+        // obstáculo 2
+        colisiones::colisionObstaculo(particulas[i],300,300,100,100);
+
+        // obstáculo 3
+        colisiones::colisionObstaculo( particulas[i],500,120,50,50);
+
+        // obstáculo 4
+        colisiones::colisionObstaculo(particulas[i],400,200,60,60);
 
         // guardar datos
 
@@ -90,25 +103,26 @@ void MainWindow::actualizar()
 
     for(size_t i=0;i<particulas.size();i++)
     {
+        if(!particulas[i].getActiva())
+            continue;
         for(size_t j=i+1;
              j<particulas.size();j++)
         {
+            if(!particulas[j].getActiva())
+                continue;
             if(colisiones::
                 detectarColision(
                     particulas[i],
                     particulas[j]))
             {
-                salida
-                    << "COLISION "
-                    << tiempo << " "
-                    << i << " "
-                    << j << "\n";
+
                 colisiones::
                     colisionCompletamenteInelastica(
                         particulas[i],
                         particulas[j]);
             }
         }
+        tiempo += 0.016;
     }
 
     archivo.close();
@@ -118,17 +132,20 @@ void MainWindow::actualizar()
 
 void MainWindow::paintEvent(QPaintEvent *event)
 {
+    Q_UNUSED(event);
     QPainter painter(this);
 
     // obstáculo
 
     painter.setBrush(Qt::darkGray);
 
-    painter.drawRect(
-        300,
-        200,
-        150,
-        100);
+    painter.drawRect(10,30,80,80);
+
+    painter.drawRect(300,300,100,100);
+
+    painter.drawRect(500,120,50,50);
+
+    painter.drawRect(400,200,60,60);
 
     // partículas
 
@@ -136,10 +153,12 @@ void MainWindow::paintEvent(QPaintEvent *event)
 
     for(size_t i=0;i<particulas.size();i++)
     {
+        if(!particulas[i].getActiva())
+            continue;
         painter.drawEllipse(
-            particulas[i].getX(),
+            particulas[i].getX()- particulas[i].getRadio(),
 
-            particulas[i].getY(),
+            particulas[i].getY()- particulas[i].getRadio(),
 
             particulas[i].getRadio()*2,
 
