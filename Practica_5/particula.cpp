@@ -10,6 +10,8 @@ particula::particula()
 
     masa = 1;
     radio = 5;
+    activa=true;
+
 }
 
 // Constructor con parámetros
@@ -23,6 +25,7 @@ particula::particula(float x, float y, float vx, float vy, float masa, float rad
 
     this->masa = masa;
     this->radio = radio;
+    activa=true;
 }
 void particula::mover(float dt)
 {
@@ -100,4 +103,13 @@ void particula::setMasa(float masa)
 void particula::setRadio(float radio)
 {
     this->radio = radio;
+}
+bool particula::getActiva()
+{
+    return activa;
+}
+
+void particula::setActiva(bool estado)
+{
+    activa = estado;
 }

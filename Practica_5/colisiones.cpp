@@ -20,10 +20,9 @@ bool colisiones::detectarColision(
                p2.getRadio();
 }
 
-void colisiones::colisionCompletamenteInelastica(
-    particula &p1,
-    particula &p2)
+void colisiones::colisionCompletamenteInelastica(particula &p1,particula &p2)
 {
+    float masaTotal=p1.getMasa()+p2.getMasa();
     float nuevaVx =
 
         (
@@ -32,14 +31,7 @@ void colisiones::colisionCompletamenteInelastica(
             p2.getMasa() * p2.getVx()
             )
 
-        /
-
-        (
-            p1.getMasa()
-            +
-            p2.getMasa()
-            );
-
+        /masaTotal;
     float nuevaVy =
 
         (
@@ -48,35 +40,80 @@ void colisiones::colisionCompletamenteInelastica(
             p2.getMasa() * p2.getVy()
             )
 
-        /
+        /masaTotal;
+    float nuevoX =(p1.getMasa()*p1.getX()+p2.getMasa()*p2.getX()) / masaTotal;
 
-        (
-            p1.getMasa()
-            +
-            p2.getMasa()
-            );
+    float nuevoY =(p1.getMasa()*p1.getY()+p2.getMasa()*p2.getY()) / masaTotal;
+
+    p1.setMasa(masaTotal);
 
     p1.setVx(nuevaVx);
     p1.setVy(nuevaVy);
 
-    p2.setVx(nuevaVx);
-    p2.setVy(nuevaVy);
+    p1.setX(nuevoX);
+    p1.setY(nuevoY);
+
+    // marcar p2 como eliminada
+    p2.setActiva(false);
 }
 
-void colisiones::colisionObstaculo(
-    particula &p,
-    int x,
-    int y,
-    int ancho,
-    int alto)
+void colisiones::colisionObstaculo(particula &p,int x,int y,int ancho,int alto)
 {
-    if(p.getX() >= x &&
-        p.getX() <= x + ancho &&
-        p.getY() >= y &&
-        p.getY() <= y + alto)
+    float e=0.7;
+    float px = p.getX();
+    float py = p.getY();
+    float r  = p.getRadio();
+    if(px + r >= x && px - r <= x + ancho && py + r >= y && py - r <= y + alto)
     {
-        p.setVx(p.getVx()*0.7);
+        float izquierda = abs((px + r) - x);
+        float derecha = abs((x + ancho) - (px - r));
+        float arriba = abs((py + r) - y);
+        float abajo = abs((y + alto) - (py - r));
+        float minimo = izquierda;
+        int lado = 0;
 
-        p.setVy(p.getVy()*0.7);
+        if(derecha < minimo)
+        {
+            minimo = derecha;
+            lado = 1;
+        }
+        if(arriba < minimo)
+        {
+            minimo = arriba;
+            lado = 2;
+        }
+        if(abajo < minimo)
+        {
+            lado = 3;
+        }
+        // izquierda
+        if(lado == 0)
+        {
+            p.setX(x - r);
+
+            p.setVx(-e * p.getVx());
+        }
+        // derecha
+        else if(lado == 1)
+        {
+            p.setX(x + ancho + r);
+
+            p.setVx(-e * p.getVx());
+        }
+        // arriba
+        else if(lado == 2)
+        {
+            p.setY(y - r);
+
+            p.setVy(-e * p.getVy());
+        }
+        // abajo
+        else
+        {
+            p.setY(y + alto + r);
+
+            p.setVy(-e * p.getVy());
+        }
+
     }
 }

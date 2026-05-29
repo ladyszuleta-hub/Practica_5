@@ -17,6 +17,7 @@ private:
     // Propiedades físicas
     float masa;
     float radio;
+    bool activa;
 
 public:
 
@@ -50,6 +51,10 @@ public:
 
     void setMasa(float masa);
     void setRadio(float radio);
+
+    bool getActiva();
+
+    void setActiva(bool estado);
 };
 
 #endif // PARTICULA_H
