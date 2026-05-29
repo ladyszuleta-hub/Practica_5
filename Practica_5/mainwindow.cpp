@@ -96,24 +96,12 @@ void MainWindow::actualizar()
             << particulas[i].getVx() << " "
             << particulas[i].getVy()
             << "\n";
-    }
-
-
-    // colisiones entre partículas
-
-    for(size_t i=0;i<particulas.size();i++)
-    {
-        if(!particulas[i].getActiva())
-            continue;
-        for(size_t j=i+1;
-             j<particulas.size();j++)
+        for(size_t j=i+1;j<particulas.size();j++)
         {
             if(!particulas[j].getActiva())
                 continue;
             if(colisiones::
-                detectarColision(
-                    particulas[i],
-                    particulas[j]))
+                detectarColision(particulas[i],particulas[j]))
             {
 
                 colisiones::
@@ -122,8 +110,8 @@ void MainWindow::actualizar()
                         particulas[j]);
             }
         }
-        tiempo += 0.016;
-    }
+
+    }tiempo += 0.016;
 
     archivo.close();
 
