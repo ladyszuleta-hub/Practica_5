@@ -12,11 +12,13 @@ SOURCES += \
     colisiones.cpp \
     main.cpp \
     mainwindow.cpp \
+    obstaculo.cpp \
     particula.cpp
 
 HEADERS += \
     colisiones.h \
     mainwindow.h \
+    obstaculo.h \
     particula.h
 
 FORMS += \

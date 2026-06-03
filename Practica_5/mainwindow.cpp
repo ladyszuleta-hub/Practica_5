@@ -111,7 +111,7 @@ void MainWindow::actualizar()
             }
         }
 
-    }tiempo += 0.016;
+    }tiempo += 0.1;
 
     archivo.close();
 

@@ -33,15 +33,15 @@ public:
     void verificarColisionParedes(int anchoCaja, int altoCaja);
 
     // Getters
-    float getX();
-    float getY();
+    float getX() const;
+    float getY() const;
 
-    float getVx();
-    float getVy();
+    float getVx() const;
+    float getVy() const;
 
-    float getMasa();
-    float getRadio();
-
+    float getMasa() const;
+    float getRadio() const;
+    bool getActiva() const;
     // Setters
     void setX(float x);
     void setY(float y);
@@ -52,9 +52,9 @@ public:
     void setMasa(float masa);
     void setRadio(float radio);
 
-    bool getActiva();
-
     void setActiva(bool estado);
+
+
 };
 
 #endif // PARTICULA_H
