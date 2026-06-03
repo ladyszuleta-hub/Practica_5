@@ -34,47 +34,58 @@ void particula::mover(float dt)
 }
 void particula::verificarColisionParedes(int anchoCaja, int altoCaja)
 {
-    // Pared izquierda o derecha
-    if(x - radio <= 0 || x + radio >= anchoCaja)
+    if (x - radio <= 0)
     {
+        x = radio;
+        vx = -vx;
+    }
+    else if (x + radio >= anchoCaja)
+    {
+        x = anchoCaja - radio;
         vx = -vx;
     }
 
-    // Techo o piso
-    if(y - radio <= 0 || y + radio >= altoCaja)
+    if (y - radio <= 0)
     {
+        y = radio;
+        vy = -vy;
+    }
+    else if (y + radio >= altoCaja)
+    {
+        y = altoCaja - radio;
         vy = -vy;
     }
 }
-float particula::getX()
+float particula::getX() const
 {
     return x;
 }
 
-float particula::getY()
+float particula::getY() const
 {
     return y;
 }
 
-float particula::getVx()
+float particula::getVx() const
 {
     return vx;
 }
 
-float particula::getVy()
+float particula::getVy() const
 {
     return vy;
 }
 
-float particula::getMasa()
+float particula::getMasa() const
 {
     return masa;
 }
 
-float particula::getRadio()
+float particula::getRadio() const
 {
     return radio;
 }
+bool particula:: getActiva() const{return activa;}
 void particula::setX(float x)
 {
     this->x = x;
@@ -103,10 +114,6 @@ void particula::setMasa(float masa)
 void particula::setRadio(float radio)
 {
     this->radio = radio;
-}
-bool particula::getActiva()
-{
-    return activa;
 }
 
 void particula::setActiva(bool estado)
