@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>recursos/obstaculo.png</file>
+        <file>recursos/personaje.png</file>
+    </qresource>
+</RCC>

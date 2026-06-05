@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     colisiones.cpp \
+    jugador.cpp \
     main.cpp \
     mainwindow.cpp \
     obstaculo.cpp \
@@ -17,6 +18,7 @@ SOURCES += \
 
 HEADERS += \
     colisiones.h \
+    jugador.h \
     mainwindow.h \
     obstaculo.h \
     particula.h
@@ -28,3 +30,6 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    recursos.qrc

@@ -6,6 +6,7 @@ bool colisiones::detectarColision(
     particula &p1,
     particula &p2)
 {
+
     float dx =
         p1.getX() - p2.getX();
 
@@ -65,10 +66,10 @@ void colisiones::colisionObstaculo(particula &p,int x,int y,int ancho,int alto)
     float r  = p.getRadio();
     if(px + r >= x && px - r <= x + ancho && py + r >= y && py - r <= y + alto)
     {
-        float izquierda = abs((px + r) - x);
-        float derecha = abs((x + ancho) - (px - r));
-        float arriba = abs((py + r) - y);
-        float abajo = abs((y + alto) - (py - r));
+        float izquierda = std::abs((px + r) - x);
+        float derecha = std::abs((x + ancho) - (px - r));
+        float arriba = std::abs((py + r) - y);
+        float abajo = std::abs((y + alto) - (py - r));
         float minimo = izquierda;
         int lado = 0;
 
