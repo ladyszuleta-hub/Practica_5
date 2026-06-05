@@ -30,7 +30,7 @@ public:
     void mover(float dt);
 
     // Rebote con paredes
-    void verificarColisionParedes(int anchoCaja, int altoCaja);
+    bool verificarColisionParedes(int izquierda, int derecha, int arriba, int abajo);
 
     // Getters
     float getX() const;
