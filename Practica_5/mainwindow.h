@@ -4,7 +4,10 @@
 #include <QMainWindow>
 #include <QTimer>
 #include <QPainter>
+#include <QPixmap>
 #include <vector>
+#include "obstaculo.h"
+#include "jugador.h"
 #include "particula.h"
 
 QT_BEGIN_NAMESPACE
@@ -30,14 +33,29 @@ private slots:
     void actualizar();
 
 
+    void on_btnDisparar_clicked();
+
 private:
 
     Ui::MainWindow *ui;
 
+    std::vector<Obstaculo> obstaculos;
+    Jugador jugador1;
+    Jugador jugador2;
+
+    int turno;
+    void cambiarTurno();
+
     QTimer *timer;
     float tiempo;
 
-    std::vector<particula> particulas;
+    particula proyectil;
+    bool proyectilActivo;
+    float gravedad;
+
+    QPixmap spriteJugador;
+    QPixmap spriteObstaculo;
+
 };
 
 #endif // MAINWINDOW_H
