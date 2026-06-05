@@ -9,6 +9,7 @@
 #include "obstaculo.h"
 #include "jugador.h"
 #include "particula.h"
+#include "juego.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -38,23 +39,16 @@ private slots:
 private:
 
     Ui::MainWindow *ui;
+    Juego juego;
 
-    std::vector<Obstaculo> obstaculos;
-    Jugador jugador1;
-    Jugador jugador2;
-
-    int turno;
-    void cambiarTurno();
+    //std::vector<Obstaculo> obstaculos;
 
     QTimer *timer;
     float tiempo;
 
-    particula proyectil;
-    bool proyectilActivo;
-    float gravedad;
-
     QPixmap spriteJugador;
     QPixmap spriteObstaculo;
+
 
 };
 

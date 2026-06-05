@@ -32,29 +32,36 @@ void particula::mover(float dt)
     x = x + vx * dt;
     y = y + vy * dt;
 }
-void particula::verificarColisionParedes(int anchoCaja, int altoCaja)
+bool particula::verificarColisionParedes(int izquierda,int derecha,int arriba,int abajo)
 {
-    if (x - radio <= 0)
+    if(x - radio <= izquierda)
     {
-        x = radio;
+        x = izquierda + radio;
         vx = -vx;
-    }
-    else if (x + radio >= anchoCaja)
-    {
-        x = anchoCaja - radio;
-        vx = -vx;
+        return true;
     }
 
-    if (y - radio <= 0)
+    else if(x + radio >= derecha)
     {
-        y = radio;
-        vy = -vy;
+        x = derecha - radio;
+        vx = -vx;
+        return true;
     }
-    else if (y + radio >= altoCaja)
+
+    if(y - radio <= arriba)
     {
-        y = altoCaja - radio;
+        y = arriba + radio;
         vy = -vy;
+        return true;
     }
+
+    else if(y + radio >= abajo)
+    {
+        y = abajo - radio;
+        vy = -vy;
+        return true;
+    }
+    return false;
 }
 float particula::getX() const
 {

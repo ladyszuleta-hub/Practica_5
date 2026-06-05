@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     colisiones.cpp \
+    juego.cpp \
     jugador.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
 
 HEADERS += \
     colisiones.h \
+    juego.h \
     jugador.h \
     mainwindow.h \
     obstaculo.h \

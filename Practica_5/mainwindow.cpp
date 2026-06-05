@@ -13,26 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     spriteJugador.load(":/recursos/personaje.png");
     spriteObstaculo.load(":/recursos/obstaculo.png");
 
-    resize(800,600);
-
-    jugador1 = Jugador("Jugador 1",1);
-
-    jugador2 = Jugador("Jugador 2",2);
-
-    turno = 1;
-
-    proyectilActivo = false;
-
-    gravedad = 0.2;
-
-    obstaculos.push_back(Obstaculo(100,450,120,120,100,1));
-
-    obstaculos.push_back(Obstaculo(300,450,120,120,100,1));
-
-    obstaculos.push_back(Obstaculo(450,100,120,120,100,2));
-
-    obstaculos.push_back(Obstaculo(600,100,120,120,100,2));
-
+    resize(1200,600);
 
     timer = new QTimer(this);
 
@@ -48,168 +29,95 @@ MainWindow::~MainWindow()
 
 void MainWindow::actualizar()
 {
-    if(proyectilActivo)
-    {
-        proyectil.setVy(
-            proyectil.getVy() + gravedad);
-
-        proyectil.mover(1);
-
-
-        proyectil.verificarColisionParedes(
-            width(),
-            height());
-
-        for(size_t i=0; i<obstaculos.size(); i++)
-        {
-            if(obstaculos[i].estaDestruido())
-                continue;
-
-            float px = proyectil.getX();
-            float py = proyectil.getY();
-            float r  = proyectil.getRadio();
-
-            int ox = obstaculos[i].getX();
-            int oy = obstaculos[i].getY();
-            int ow = obstaculos[i].getAncho();
-            int oh = obstaculos[i].getAlto();
-
-            if(px + r >= ox &&
-                px - r <= ox + ow &&
-                py + r >= oy &&
-                py - r <= oy + oh)
-            {
-                float velocidad =sqrt(proyectil.getVx()*proyectil.getVx()+proyectil.getVy()*proyectil.getVy());
-
-                float momento =proyectil.getMasa() * velocidad;
-
-                float danio =0.5 * momento;
-
-                obstaculos[i].recibirDanio(danio);
-
-                proyectilActivo = false;
-
-                if(turno == 1)
-                    turno = 2;
-                else
-                    turno = 1;
-            }
-        }
-    }
+    juego.actualizar();
 
     repaint();
 }
 void MainWindow::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
+
     QPainter painter(this);
 
+    painter.setPen(Qt::white);
+
+    // área de juego
+    painter.drawRect(220,0,980,600);
+
+    // referencia a los obstáculos del juego
+    vector<Obstaculo>& obstaculos =juego.getObstaculos();
 
     for(size_t i=0; i<obstaculos.size(); i++)
     {
         if(obstaculos[i].estaDestruido())
             continue;
 
-        painter.drawPixmap(
-            obstaculos[i].getX(),
-            obstaculos[i].getY(),
-            obstaculos[i].getAncho(),
-            obstaculos[i].getAlto(),
-            spriteObstaculo
-            );
+        painter.drawPixmap(obstaculos[i].getX(),obstaculos[i].getY(),
+                           obstaculos[i].getAncho(),obstaculos[i].getAlto(),spriteObstaculo);
+
         painter.drawText(
-            obstaculos[i].getX(),
-            obstaculos[i].getY()-5,
-            QString::number(
-                (int)obstaculos[i].getResistencia()
-                )
-            );
+            obstaculos[i].getX(),obstaculos[i].getY()-5,
+            QString::number((int)obstaculos[i].getResistencia()));
     }
 
-    painter.setPen(Qt::white);
-
-    if(turno == 1)
+    // turno actual
+    if(juego.getTurno() == 1)
     {
-        painter.drawText(
-            20,
-            20,
-            "Turno: Jugador 1");
+        painter.drawText(30,30,"Turno: Jugador 1");
     }
     else
     {
-        painter.drawText(
-            20,
-            20,
-            "Turno: Jugador 2");
+        painter.drawText(30,30,"Turno: Jugador 2");
     }
-    //jugadores
-    painter.drawPixmap(190, 460,120, 120, spriteJugador);
-    painter.drawPixmap(540, 150,120, 120, spriteJugador);
 
-    if(proyectilActivo)
+    // jugadores
+    QRect j1 = juego.getRectJugador1();
+
+    painter.drawPixmap(j1,spriteJugador);
+
+    QRect j2 = juego.getRectJugador2();
+
+    painter.drawPixmap(j2,spriteJugador);
+
+    // proyectil
+    if(juego.estaActivo())
     {
+        particula& proyectil =
+            juego.getProyectil();
+
         painter.setBrush(Qt::yellow);
 
         painter.drawEllipse(
-            proyectil.getX()
-                - proyectil.getRadio(),
-
-            proyectil.getY()
-                - proyectil.getRadio(),
-
+            proyectil.getX() - proyectil.getRadio(),
+            proyectil.getY() - proyectil.getRadio(),
             proyectil.getRadio()*2,
+            proyectil.getRadio()*2
+            );
+    }
+    if(juego.getGanador() != 0)
+    {
+        painter.setPen(Qt::red);
 
-            proyectil.getRadio()*2);
+        painter.setFont(
+            QFont("Arial",24,QFont::Bold));
+
+        painter.drawText(
+            rect(),
+            Qt::AlignCenter,
+            QString("GANA EL JUGADOR %1")
+                .arg(juego.getGanador())
+            );
     }
 }
-void MainWindow::cambiarTurno()
-{
-    if(turno == 1)
-        turno = 2;
-    else
-        turno = 1;
-}
+
 
 void MainWindow::on_btnDisparar_clicked()
 {
-    if(proyectilActivo)
-        return;
+    float angulo =ui->txtAngulo->text().toFloat();
 
-    float angulo =
-        ui->txtAngulo->text().toFloat();
+    float velocidad =ui->txtVelocidad->text().toFloat();
 
-    float velocidad =
-        ui->txtVelocidad->text().toFloat();
-
-    float radianes =
-        angulo * M_PI / 180.0;
-
-    if(turno == 1)
-    {
-        proyectil.setX(200);
-        proyectil.setY(450);
-
-        proyectil.setVx(
-            velocidad * cos(radianes));
-
-        proyectil.setVy(
-            -velocidad * sin(radianes));
-    }
-    else
-    {
-        proyectil.setX(550);
-        proyectil.setY(250);
-
-        proyectil.setVx(
-            -velocidad * cos(radianes));
-
-        proyectil.setVy(
-            velocidad * sin(radianes));
-    }
-
-    proyectil.setRadio(10);
-
-    proyectilActivo = true;
+    juego.disparar(angulo,velocidad);
 
 }
 
